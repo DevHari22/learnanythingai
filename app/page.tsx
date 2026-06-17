@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import LandingPage from "./components/LandingPage";
 
-const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3002";
+const API = process.env.NEXT_PUBLIC_API_URL || "${API}";
 
 interface Lesson {
   id: string;
@@ -326,7 +326,7 @@ export default function DashboardPage() {
     videoTitle?: string | null
   ) => {
     try {
-      await fetch(`${API}/api/reviews/grade`, {
+      await fetch("${API}/api/reviews/grade", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, videoId, questionId, correct, question, videoTitle }),
@@ -379,7 +379,7 @@ export default function DashboardPage() {
   };
 
   const savePreferences = async (prefs: UserPreferences) => {
-    const res = await fetch(`${API}/api/users/preferences`, {
+    const res = await fetch("${API}/api/users/preferences", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, ...prefs }),
@@ -546,7 +546,7 @@ export default function DashboardPage() {
       );
 
       try {
-        await fetch(`${API}/api/classrooms/save`, {
+        await fetch("${API}/api/classrooms/save", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -595,7 +595,7 @@ export default function DashboardPage() {
       const current = selectedClassroomRef.current;
       if (!current) return;
       try {
-        await fetch(`${API}/api/classrooms/save`, {
+        await fetch("${API}/api/classrooms/save", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -721,7 +721,7 @@ export default function DashboardPage() {
     setSavingNote(true);
     setNoteStatus("Saving...");
     try {
-      const res = await fetch(`${API}/api/notes/save`, {
+      const res = await fetch("${API}/api/notes/save", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -763,7 +763,7 @@ export default function DashboardPage() {
 
     // Make sure this course's quiz questions are tagged with concepts (idempotent;
     // the server skips if already tagged) so graded answers feed the learner model.
-    fetch(`${API}/api/concepts/tag`, {
+    fetch("${API}/api/concepts/tag", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, videoId: record.videoId }),
@@ -815,7 +815,7 @@ export default function DashboardPage() {
     setRecapLoading(true);
     setRecapOpen(true);
     try {
-      const res = await fetch(`${API}/api/recap`, {
+      const res = await fetch("${API}/api/recap", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -864,7 +864,7 @@ export default function DashboardPage() {
 
     // Save update to backend
     try {
-      await fetch(`${API}/api/classrooms/save`, {
+      await fetch("${API}/api/classrooms/save", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -910,7 +910,7 @@ export default function DashboardPage() {
 
     // Save update to backend
     try {
-      await fetch(`${API}/api/classrooms/save`, {
+      await fetch("${API}/api/classrooms/save", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -944,7 +944,7 @@ export default function DashboardPage() {
     setChatLoading(true);
 
     try {
-      const res = await fetch(`${API}/api/chat`, {
+      const res = await fetch("${API}/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -4627,7 +4627,7 @@ function AssignmentCardComponent({ assignment, isCodingCourse, isPython, email, 
     setIsSaving(true);
     setSaveStatus("Saving...");
     try {
-      const res = await fetch(`${API}/api/assignments/solution`, {
+      const res = await fetch("${API}/api/assignments/solution", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -4710,7 +4710,7 @@ function AssignmentCardComponent({ assignment, isCodingCourse, isPython, email, 
     let codePassed = false;
     if (isPython) {
       try {
-        const res = await fetch(`${API}/api/execute`, {
+        const res = await fetch("${API}/api/execute", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

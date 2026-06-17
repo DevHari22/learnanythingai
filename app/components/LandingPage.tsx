@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 
 const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3002";
+
 interface LandingPageProps {
   onSignIn: (email: string) => void;
 }
@@ -547,6 +548,66 @@ export default function LandingPage({ onSignIn }: LandingPageProps) {
               <p className="mt-1.5 text-xs font-medium text-zinc-500">{s.label}</p>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* ── EXTENSION DOWNLOAD ─────────────────────────────────────── */}
+      <section className="border-b border-zinc-200 bg-white px-8 py-16 lg:px-16">
+        <div className="flex flex-col items-center gap-8 lg:flex-row lg:items-center lg:justify-between">
+          {/* Left: copy */}
+          <div className="max-w-xl">
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-violet-200 bg-violet-50 px-3 py-1">
+              <svg className="h-3.5 w-3.5 text-violet-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+              </svg>
+              <span className="text-xs font-semibold text-violet-700">Chrome Extension</span>
+            </div>
+            <h2 className="text-2xl font-extrabold tracking-tight text-zinc-900 sm:text-3xl">
+              Works right inside YouTube
+            </h2>
+            <p className="mt-3 text-sm leading-relaxed text-zinc-500">
+              Install the browser extension, open any YouTube tutorial, click <strong className="text-zinc-700">"Generate Classroom"</strong> — and your full AI course is ready in 30 seconds without leaving the tab.
+            </p>
+            <ol className="mt-5 space-y-2 text-sm text-zinc-600">
+              {[
+                "Download and unzip the extension file",
+                "Open Chrome → go to chrome://extensions",
+                'Enable "Developer mode" (top right toggle)',
+                'Click "Load unpacked" → select the unzipped folder',
+              ].map((step, i) => (
+                <li key={i} className="flex items-start gap-3">
+                  <span className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-indigo-100 text-[10px] font-bold text-indigo-700">
+                    {i + 1}
+                  </span>
+                  {step}
+                </li>
+              ))}
+            </ol>
+          </div>
+
+          {/* Right: download card */}
+          <div className="w-full max-w-xs flex-shrink-0">
+            <div className="rounded-2xl border border-zinc-200 bg-zinc-50 p-6 text-center shadow-sm">
+              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-600 shadow-lg shadow-indigo-200">
+                <svg className="h-7 w-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+              </div>
+              <p className="text-sm font-bold text-zinc-900">LearnAnythingAI Extension</p>
+              <p className="mt-1 text-xs text-zinc-500">v1.1.0 · Chrome · Free</p>
+              <a
+                href="/learnanythingai-extension.zip"
+                download="learnanythingai-extension.zip"
+                className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-sm font-bold text-white shadow-md shadow-indigo-200 transition-all hover:bg-indigo-700 active:scale-95"
+              >
+                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download Extension
+              </a>
+              <p className="mt-3 text-[10px] text-zinc-400">Requires Chrome · Manual install until Web Store listing is live</p>
+            </div>
+          </div>
         </div>
       </section>
 
