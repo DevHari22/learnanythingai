@@ -3,6 +3,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import LandingPage from "./components/LandingPage";
 
+const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3002";
+
 interface Lesson {
   id: string;
   title: string;
@@ -201,7 +203,7 @@ export default function DashboardPage() {
     setError(null);
     try {
       const res = await fetch(
-        `http://localhost:3002/api/classrooms?email=${encodeURIComponent(userEmail)}`
+        `${API}/api/classrooms?email=${encodeURIComponent(userEmail)}`
       );
       if (!res.ok) {
         throw new Error("Failed to load your progress data. Please try again.");
@@ -224,7 +226,7 @@ export default function DashboardPage() {
     setRecsError(null);
     try {
       const res = await fetch(
-        `http://localhost:3002/api/recommendations?email=${encodeURIComponent(userEmail)}${refresh ? "&refresh=true" : ""}`
+        `${API}/api/recommendations?email=${encodeURIComponent(userEmail)}${refresh ? "&refresh=true" : ""}`
       );
       const body = await res.json();
       if (res.ok && body.success && Array.isArray(body.videos)) {
@@ -242,7 +244,7 @@ export default function DashboardPage() {
   const loadKnowledge = async (userEmail: string) => {
     try {
       const res = await fetch(
-        `http://localhost:3002/api/concepts/profile?email=${encodeURIComponent(userEmail)}`
+        `${API}/api/concepts/profile?email=${encodeURIComponent(userEmail)}`
       );
       const body = await res.json();
       if (res.ok && body.success && body.summary) {
@@ -257,7 +259,7 @@ export default function DashboardPage() {
     setConceptRecsLoading(true);
     try {
       const res = await fetch(
-        `http://localhost:3002/api/concepts/recommendations?email=${encodeURIComponent(userEmail)}`
+        `${API}/api/concepts/recommendations?email=${encodeURIComponent(userEmail)}`
       );
       const body = await res.json();
       if (res.ok && body.success && Array.isArray(body.groups)) {
@@ -273,7 +275,7 @@ export default function DashboardPage() {
   const loadActivity = async (userEmail: string) => {
     try {
       const res = await fetch(
-        `http://localhost:3002/api/reviews/activity?email=${encodeURIComponent(userEmail)}&days=30`
+        `${API}/api/reviews/activity?email=${encodeURIComponent(userEmail)}&days=30`
       );
       const body = await res.json();
       if (res.ok && body.success && Array.isArray(body.activity)) {
@@ -286,15 +288,15 @@ export default function DashboardPage() {
 
   const fetchDashboard = (userEmail: string) => {
     Promise.all([
-      fetch(`http://localhost:3002/api/dashboard/weekly-report?email=${encodeURIComponent(userEmail)}`).then(r => r.json()).catch(() => null),
-      fetch(`http://localhost:3002/api/dashboard/timeline?email=${encodeURIComponent(userEmail)}`).then(r => r.json()).catch(() => null),
+      fetch(`${API}/api/dashboard/weekly-report?email=${encodeURIComponent(userEmail)}`).then(r => r.json()).catch(() => null),
+      fetch(`${API}/api/dashboard/timeline?email=${encodeURIComponent(userEmail)}`).then(r => r.json()).catch(() => null),
     ]).then(([report, timeline]) => {
       setDashboardReport(report);
       setDashboardTimeline(timeline);
     });
     setNextStepLoading(true);
     setDashboardNextStep(null);
-    fetch(`http://localhost:3002/api/dashboard/next-step?email=${encodeURIComponent(userEmail)}`)
+    fetch(`${API}/api/dashboard/next-step?email=${encodeURIComponent(userEmail)}`)
       .then(r => r.json())
       .then(data => setDashboardNextStep(data))
       .catch(() => {})
@@ -304,7 +306,7 @@ export default function DashboardPage() {
   const loadReviewStats = async (userEmail: string) => {
     try {
       const res = await fetch(
-        `http://localhost:3002/api/reviews/stats?email=${encodeURIComponent(userEmail)}`
+        `${API}/api/reviews/stats?email=${encodeURIComponent(userEmail)}`
       );
       const body = await res.json();
       if (res.ok && body.success && body.stats) {
@@ -324,7 +326,7 @@ export default function DashboardPage() {
     videoTitle?: string | null
   ) => {
     try {
-      await fetch("http://localhost:3002/api/reviews/grade", {
+      await fetch(`${API}/api/reviews/grade`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, videoId, questionId, correct, question, videoTitle }),
@@ -339,7 +341,7 @@ export default function DashboardPage() {
     setReviewLoading(true);
     try {
       const res = await fetch(
-        `http://localhost:3002/api/reviews/due?email=${encodeURIComponent(email)}`
+        `${API}/api/reviews/due?email=${encodeURIComponent(email)}`
       );
       const body = await res.json();
       if (res.ok && body.success && Array.isArray(body.items) && body.items.length > 0) {
@@ -360,7 +362,7 @@ export default function DashboardPage() {
   const loadPreferences = async (userEmail: string) => {
     try {
       const res = await fetch(
-        `http://localhost:3002/api/users/preferences?email=${encodeURIComponent(userEmail)}`
+        `${API}/api/users/preferences?email=${encodeURIComponent(userEmail)}`
       );
       if (!res.ok) return;
       const body = await res.json();
@@ -377,7 +379,7 @@ export default function DashboardPage() {
   };
 
   const savePreferences = async (prefs: UserPreferences) => {
-    const res = await fetch("http://localhost:3002/api/users/preferences", {
+    const res = await fetch(`${API}/api/users/preferences`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, ...prefs }),
@@ -544,7 +546,7 @@ export default function DashboardPage() {
       );
 
       try {
-        await fetch("http://localhost:3002/api/classrooms/save", {
+        await fetch(`${API}/api/classrooms/save`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -593,7 +595,7 @@ export default function DashboardPage() {
       const current = selectedClassroomRef.current;
       if (!current) return;
       try {
-        await fetch("http://localhost:3002/api/classrooms/save", {
+        await fetch(`${API}/api/classrooms/save`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -698,7 +700,7 @@ export default function DashboardPage() {
   const loadNotesForCourse = async (vidId: string) => {
     try {
       const res = await fetch(
-        `http://localhost:3002/api/notes/load?email=${encodeURIComponent(email)}&videoId=${encodeURIComponent(vidId)}`
+        `${API}/api/notes/load?email=${encodeURIComponent(email)}&videoId=${encodeURIComponent(vidId)}`
       );
       if (res.ok) {
         const body = await res.json();
@@ -719,7 +721,7 @@ export default function DashboardPage() {
     setSavingNote(true);
     setNoteStatus("Saving...");
     try {
-      const res = await fetch("http://localhost:3002/api/notes/save", {
+      const res = await fetch(`${API}/api/notes/save`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -761,7 +763,7 @@ export default function DashboardPage() {
 
     // Make sure this course's quiz questions are tagged with concepts (idempotent;
     // the server skips if already tagged) so graded answers feed the learner model.
-    fetch("http://localhost:3002/api/concepts/tag", {
+    fetch(`${API}/api/concepts/tag`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, videoId: record.videoId }),
@@ -813,7 +815,7 @@ export default function DashboardPage() {
     setRecapLoading(true);
     setRecapOpen(true);
     try {
-      const res = await fetch("http://localhost:3002/api/recap", {
+      const res = await fetch(`${API}/api/recap`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -862,7 +864,7 @@ export default function DashboardPage() {
 
     // Save update to backend
     try {
-      await fetch("http://localhost:3002/api/classrooms/save", {
+      await fetch(`${API}/api/classrooms/save`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -908,7 +910,7 @@ export default function DashboardPage() {
 
     // Save update to backend
     try {
-      await fetch("http://localhost:3002/api/classrooms/save", {
+      await fetch(`${API}/api/classrooms/save`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -942,7 +944,7 @@ export default function DashboardPage() {
     setChatLoading(true);
 
     try {
-      const res = await fetch("http://localhost:3002/api/chat", {
+      const res = await fetch(`${API}/api/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -4625,7 +4627,7 @@ function AssignmentCardComponent({ assignment, isCodingCourse, isPython, email, 
     setIsSaving(true);
     setSaveStatus("Saving...");
     try {
-      const res = await fetch("http://localhost:3002/api/assignments/solution", {
+      const res = await fetch(`${API}/api/assignments/solution`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -4658,7 +4660,7 @@ function AssignmentCardComponent({ assignment, isCodingCourse, isPython, email, 
       }
       setSaveStatus("Loading solution...");
       try {
-        const url = `http://localhost:3002/api/assignments/solution?email=${encodeURIComponent(email)}&videoId=${encodeURIComponent(videoId)}&moduleId=${encodeURIComponent(moduleId)}`;
+        const url = `${API}/api/assignments/solution?email=${encodeURIComponent(email)}&videoId=${encodeURIComponent(videoId)}&moduleId=${encodeURIComponent(moduleId)}`;
         const res = await fetch(url);
         if (!res.ok) throw new Error("Load failed");
         const body = await res.json();
@@ -4708,7 +4710,7 @@ function AssignmentCardComponent({ assignment, isCodingCourse, isPython, email, 
     let codePassed = false;
     if (isPython) {
       try {
-        const res = await fetch("http://localhost:3002/api/execute", {
+        const res = await fetch(`${API}/api/execute`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

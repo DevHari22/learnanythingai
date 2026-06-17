@@ -2,8 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 
-const API = "http://localhost:3002";
-
+const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3002";
 interface LandingPageProps {
   onSignIn: (email: string) => void;
 }
